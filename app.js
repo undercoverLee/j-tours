@@ -15,7 +15,7 @@ app.post('/', (req, res) => {
 })
 
 
-const tours = JSON.parse(fs.readFileSync('${__dirname}/dev-data/data/tours-simple.js'))
+const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.js`))
 
 
 
