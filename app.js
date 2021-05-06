@@ -6,29 +6,17 @@ const app = express()
 // middelware - mes req, res
 app.use(express.json())
 
-app.get('/', (req, res) => {
-    res.json({
-        message: "Hello from the sever side",
-        app: "jTours"
-    })
-})
-
-app.post('/', (req, res) => {
-    res.send("You can post to this URL")
-})
-
-
+// e kem lexu filen i cili i permban te gjitha tours
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`))
 
-app.get('/api/v1/tours', (req, res) => {
+const getAllTours = (req, res) => {
     res.json({
         status: "success",
         data: { tours }
     })
-})
+}
 
-
-app.post('/api/v1/tours', (req, res) => {
+const createTour = (req, res) => {
     // console.log(req.body)
 
     // ka me u shtu nje dokument i ri
@@ -45,7 +33,114 @@ app.post('/api/v1/tours', (req, res) => {
         })
 
     })
+}
 
+const getTour = (req, res) => {
+    console.log(req.params)
+
+    // po e marrim id-n dhe po e konvertojm ne string
+    const id = req.params.id * 1
+    const tour = tours.find(el => el.id === id)
+
+    if (!tour) {
+        return res.json({
+            status: "fail",
+            message: "Invaild ID"
+
+        })
+    }
+
+    res.json({
+        status: "success",
+        data: {
+            tour
+        }
+    })
+
+}
+
+const updateTour = (req, res) => {
+
+    const id = req.params.id
+    if (id > tours.length) {
+        return res.json({
+            status: "fail",
+            messages: "Invalid ID"
+        })
+    }
+
+    res.json({
+        status: "success",
+        data: {
+            tour: "Updated tour"
+        }
+    })
+
+}
+
+const deleteTour = (req, res) => {
+
+    const id = req.params.id
+    if (id > tours.length) {
+        return res.json({
+            status: "fail",
+            messages: "Invalid ID"
+        })
+    }
+
+    res.json({
+        status: "succsess",
+        data: null
+    })
+}
+
+app
+    .route('/api/v1/tours')
+    .get(getAllTours)
+    .post(createTour)
+
+
+app
+    .route('/api/v1/tours/:id')
+    .get(getTour)
+    .patch(updateTour)
+    .delete(deleteTour)
+
+
+
+app.patch('/api/v1/tours/:id', (req, res) => {
+
+    const id = req.params.id
+    if (id > tours.length) {
+        return res.json({
+            status: "fail",
+            messages: "Invalid ID"
+        })
+    }
+
+    res.json({
+        status: "success",
+        data: {
+            tour: "Updated tour"
+        }
+    })
+
+})
+
+app.delete('/api/v1/tours/:id', (req, res) => {
+
+    const id = req.params.id
+    if (id > tours.length) {
+        return res.json({
+            status: "fail",
+            messages: "Invalid ID"
+        })
+    }
+
+    res.json({
+        status: "succsess",
+        data: null
+    })
 })
 
 
