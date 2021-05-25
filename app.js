@@ -7,13 +7,11 @@ const userRouter = require('./routes/userRoutes')
 
 const app = express()
 
-
 // 1) MIDDELWARE
 // middelware - mes req, res
 app.use(express.json())
 
 app.use(morgan('dev'))
-
 
 app.use((req, res, next) => {
     console.log("Hello from the middelware")
@@ -26,21 +24,10 @@ app.use((req, res, next) => {
 })
 
 
-// 2) ROUTE HANDLERS
-
-
-
 // 3) ROUTE
 
 app.use('/api/v1/tours', tourRouter)
 app.use('/api/v1/users', userRouter)
 
 
-
-
-// 4) SERVER 
-
-app.listen(3000, () => {
-    console.log("Server is listeing")
-})
-
+module.exports = app

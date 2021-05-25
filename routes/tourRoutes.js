@@ -1,8 +1,17 @@
 const express = require('express')
 const tourController = require('./../controllers/tourController')
 
-
 const router = express.Router()
+
+// val=id qe e marrim nga objekti ne file
+router.param('id', (req, res, next, val) => {
+    console.log(`Tour id is: ${val}`)
+    next()
+})
+
+
+
+
 
 router
     .route('/')
