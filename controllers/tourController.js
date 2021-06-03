@@ -5,8 +5,6 @@ const Tour = require('./../models/tourModel')
 // const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`))
 
 
-
-
 exports.getAllTours = (req, res) => {
     console.log(req.requestTime)
 
@@ -17,7 +15,30 @@ exports.getAllTours = (req, res) => {
     })
 }
 
-exports.createTour = (req, res) => {
+exports.createTour = async (req, res) => {
+    // O1
+    // const newTour = new Tour({})
+    // newTour.save()
+
+    try {
+        const newTour = await Tour.create(req.body)
+
+        res.json({
+            status: "succes",
+            data: {
+                tour: newTour
+            }
+        })
+    }
+
+    catch (err) {
+        res.json({
+            status: "fail",
+            message: err
+        })
+    }
+
+
    
 }
 
