@@ -5,14 +5,23 @@ const Tour = require('./../models/tourModel')
 // const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`))
 
 
-exports.getAllTours = (req, res) => {
-    console.log(req.requestTime)
-
-    res.json({
-        status: "success",
-        // requested: req.requestTime,
-        // data: { tours }
-    })
+exports.getAllTours = async (req, res) => {
+    
+    try {
+        const tours = await Tour.find()
+    
+        res.json({
+            status: "success",
+            data: { tours }
+        })
+    }
+    catch (err) {
+        res.json({
+            status: "fail",
+            message: err
+        })
+        
+    }
 }
 
 exports.createTour = async (req, res) => {
@@ -42,37 +51,69 @@ exports.createTour = async (req, res) => {
    
 }
 
-exports.getTour = (req, res) => {
+exports.getTour = async (req, res) => {
     console.log(req.params)
 
-    // po e marrim id-n dhe po e konvertojm ne string
-    // const id = req.params.id * 1
-    // const tour = tours.find(el => el.id === id)
+    try {
+        const tour = await Tour.findById(req.params.id)
 
-    // res.json({
-    //     status: "success",
-    //     data: {
-    //         tour
-    //     }
-    // })
+        res.json({
+            status: "success",
+            data: {tour}
+            })
+    }
 
-}
-
-exports.updateTour = (req, res) => {
-
-    res.json({
-        status: "success",
-        data: {
-            tour: "Updated tour"
-        }
-    })
+    catch (err) {
+        res.json({
+            status: "fail",
+            message: err
+        })
+    }
 
 }
 
-exports.deleteTour = (req, res) => {
+exports.updateTour = async (req, res) => {
 
-    res.json({
-        status: "succsess",
-        data: null
-    })
+    try {
+
+        const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+            runValidators: true
+        })
+        
+        res.json({
+            status: "success",
+            data: {
+                tour
+            }
+        })
+    }
+
+    catch {
+        res.json({
+            status: "fail",
+            message: err
+        })
+    }
+}
+
+exports.deleteTour = async (req, res) => {
+
+    try {
+
+        await Tour.findByIdAndDelete(req.params.id)
+
+        res.json({
+            status: "succsess",
+            data: null
+        })
+    }
+
+    catch (err) {
+        res.json({
+            status: "fail",
+            message: err
+        })
+    }
+
 }
